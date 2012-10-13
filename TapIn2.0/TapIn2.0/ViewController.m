@@ -92,7 +92,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         [ASIS3Request setSharedSecretAccessKey:@"ajQqlwKdktd4HtbgAQbvLJSD32FzZ+Q1n270BfGX"];
         [ASIS3Request setSharedAccessKey:@"AKIAJDBX254H3PJLPGDQ"];
         
-        ASIS3ObjectRequest * request = [ASIS3ObjectRequest PUTRequestForData:data withBucket:@"upload.tapin.tv" key:[NSString stringWithFormat:@"%i:%@.mp4", [Utilities timestamp], [Utilities phoneID]]];
+        ASIS3ObjectRequest * request = [ASIS3ObjectRequest PUTRequestForData:data withBucket:@"content.duck.tapin.tv" key:[NSString stringWithFormat:@"%i:%@.mp4", [Utilities timestamp], [Utilities phoneID]]];
         [request setDownloadProgressDelegate:progress];
         NSLog(@"Value: %f",[progress progress]);
         [imagePicker.view addSubview:progress];
