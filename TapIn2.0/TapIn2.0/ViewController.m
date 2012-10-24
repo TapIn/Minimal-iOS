@@ -10,11 +10,14 @@
 #import "ASIS3Request.h"
 #import "ASIS3ObjectRequest.h"
 #import "Utilities.h"
-
+#import "Mixpanel.h"
+#import "ASIHTTPRequest.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface ViewController ()
 {
     UIImagePickerController *imagePicker;
+    NSString * videoFilename;
 }
 
 @end
@@ -24,14 +27,17 @@
 
 - (void)viewDidLoad
 {
-       [super viewDidLoad];
-    [self performSelector:@selector(useCamera:) withObject:nil afterDelay:0];
+    [super viewDidLoad];
+//    [self performSelector:@selector(useCamera:) withObject:nil afterDelay:0];
 
 }
 
 
 - (IBAction) useCamera: (id)sender
 {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Use Camera"];
+    
     if ([UIImagePickerController isSourceTypeAvailable:
          UIImagePickerControllerSourceTypeCamera])
     {
@@ -57,10 +63,12 @@
 
 - (IBAction) useCameraRoll: (id)sender
 {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Use Camera Roll"];
            if ([UIImagePickerController isSourceTypeAvailable:
              UIImagePickerControllerSourceTypeSavedPhotosAlbum])
         {
-            UIImagePickerController *imagePicker =
+            imagePicker =
             [[UIImagePickerController alloc] init];
             imagePicker.delegate = self;
             imagePicker.sourceType =
@@ -89,25 +97,41 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         // To create the object
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         NSData * data  = [NSData dataWithContentsOfURL:videoURL];
+//        
+//        
+//        AVURLAsset * footageVideo = [AVURLAsset URLAssetWithURL:videoURL options:nil];
+//        AVAssetTrack * footageVideoTrack = [footageVideo compatibleTrackForCompositionTrack:videoTrack];
+//        
+//        CGAffineTransform t = footageVideoTrack.preferredTransform;
+        
+        
         [ASIS3Request setSharedSecretAccessKey:@"ajQqlwKdktd4HtbgAQbvLJSD32FzZ+Q1n270BfGX"];
         [ASIS3Request setSharedAccessKey:@"AKIAJDBX254H3PJLPGDQ"];
-        
-        ASIS3ObjectRequest * request = [ASIS3ObjectRequest PUTRequestForData:data withBucket:@"content.duck.tapin.tv" key:[NSString stringWithFormat:@"%i:%@.mp4", [Utilities timestamp], [Utilities phoneID]]];
+        videoFilename = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%i-%@.mp4", [Utilities timestamp], [Utilities phoneID]]];
+        ASIS3ObjectRequest * request = [ASIS3ObjectRequest PUTRequestForData:data withBucket:@"content.duck.tapin.tv" key:videoFilename];
         [request setDownloadProgressDelegate:progress];
+        [request setDelegate:self];
+        [request setAccessPolicy:@"public-read"];
         NSLog(@"Value: %f",[progress progress]);
-        [imagePicker.view addSubview:progress];
+//        [imagePicker.view addSubview:progress];
         UILabel * test = [[UILabel alloc]initWithFrame:CGRectMake(50, 300, 500, 50)];
         test.text = @"FOIWEJFOIWJF WJFWFJWLEFJ W";
         test.textColor = [UIColor whiteColor];
         [imagePicker.view addSubview:test];
-
+        
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Don't be alarmed!" message:@"Your videos are automatically being uploaded. See the progress bar." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        
+        
         [request setShowAccurateProgress:YES];
-        [request startSynchronous];
+        [request startAsynchronous];
         
         if ([request error]) {
             UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"There was an error" message:@"Coudln't upload it. Tap the upload button, pick your video to try again" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             NSLog(@"%@",[[request error] localizedDescription]);
             [alert show];
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [mixpanel track:@"Upload Video Error"];
         }
         
         //get the videoURL
@@ -134,6 +158,66 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         // Code here to support video if enabled
     }
 }
+
++ (UIInterfaceOrientation)orientationForTrack:(AVAsset *)asset
+{
+    AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    CGSize size = [videoTrack naturalSize];
+    CGAffineTransform txf = [videoTrack preferredTransform];
+    
+    if (size.width == txf.tx && size.height == txf.ty)
+        return UIInterfaceOrientationLandscapeRight;
+    else if (txf.tx == 0 && txf.ty == 0)
+        return UIInterfaceOrientationLandscapeLeft;
+    else if (txf.tx == 0 && txf.ty == size.width)
+        return UIInterfaceOrientationPortraitUpsideDown;
+    else
+        return UIInterfaceOrientationPortrait;
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    // Use when fetching text data
+    NSString *responseString = [request responseString];
+    
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Don't be alarmed!" message:@"Your video has been uploaded successfully!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show];
+    
+    // Use when fetching binary data
+    NSData *responseData = [request responseData];
+    NSLog(@"This is the response: %@", responseString);
+    NSLog(@"%@", [[request url] absoluteString]);
+    //Check the URL of the request before sending to prevent loop
+    NSString * requestString = [[request url] absoluteString];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Upload Video"];
+    
+//    if ([requestString rangeOfString:@"http://content.duck.tapin.tv.s3.amazonaws.com"].location != NSNotFound)
+//    {
+//        //Send push
+//        NSString * urlString = [NSString stringWithFormat:@"http://duck.tapin.tv/sendpush.php?from=%@&video=%@", [Utilities phoneID], videoFilename];
+//        NSURL *url = [NSURL URLWithString: urlString];
+//        NSLog(@"This is the URLSTring: %@", urlString);
+//        ASIHTTPRequest *_request = [ASIHTTPRequest requestWithURL:url];
+//        [_request startSynchronous];
+//        NSError *error = [_request error];
+//        if (!error) {
+//            NSString *response = [_request responseString];
+//            NSLog(@"%@", response);
+//        }
+//    }
+}
+
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
+//    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+//}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+}
+
 -(void)image:(UIImage *)image
 finishedSavingWithError:(NSError *)error
  contextInfo:(void *)contextInfo

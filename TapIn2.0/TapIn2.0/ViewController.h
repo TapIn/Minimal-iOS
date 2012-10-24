@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "ASIHTTPRequest.h"
 
 @interface ViewController : UIViewController 
 <UIImagePickerControllerDelegate,
-UINavigationControllerDelegate>
+UINavigationControllerDelegate,
+ASIHTTPRequestDelegate>
 {
     UIToolbar *toolbar;
     UIPopoverController *popoverController;
@@ -20,6 +22,7 @@ UINavigationControllerDelegate>
     IBOutlet UIProgressView * progress;
 
 }
++ (UIInterfaceOrientation)orientationForTrack:(AVAsset *)asset;
 @property (nonatomic, retain) IBOutlet UIImageView *imageView;
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 @end
