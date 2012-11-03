@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "ASIHTTPRequest.h"
+#import "GPUImage.h"
 
 @interface ViewController : UIViewController 
 <UIImagePickerControllerDelegate,
@@ -20,9 +21,15 @@ ASIHTTPRequestDelegate>
     UIImageView *imageView;
     BOOL newMedia;
     IBOutlet UIProgressView * progress;
-
+    IBOutlet UIButton * recordButton;
+    GPUImageVideoCamera *videoCamera;
+    GPUImageOutput<GPUImageInput> *filter;
+    GPUImageMovieWriter *movieWriter;
+    IBOutlet GPUImageView * gpuImageView;
 }
-+ (UIInterfaceOrientation)orientationForTrack:(AVAsset *)asset;
+- (IBAction)updateSliderValue:(id)sender;
+- (IBAction)toggleRecord:(id)sender;
+- (IBAction)toggleCamera:(id)sender;
 @property (nonatomic, retain) IBOutlet UIImageView *imageView;
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 @end

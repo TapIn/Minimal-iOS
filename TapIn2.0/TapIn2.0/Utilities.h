@@ -24,8 +24,6 @@
     NSString * streamID;
     BOOL streaming;
 }
--(void)startLocationService;
--(void)stopLocationService;
 +(id)sharedInstance;
 +(void) setUserDefaultValue:(id)value forKey:(NSString *)key;
 +(id) userDefaultValueforKey:(NSString *)key;

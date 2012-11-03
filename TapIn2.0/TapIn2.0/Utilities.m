@@ -37,6 +37,18 @@
     abort();
 }
 
++(void) setUserDefaultValue:(id)value forKey:(NSString* )key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:value forKey:key];
+}
+
++(id) userDefaultValueforKey:(NSString *)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults valueForKey:key];
+}
+
 +(id)sharedInstance
 {
     static dispatch_once_t pred;
@@ -127,13 +139,43 @@
 }
 
 
+-(void)sendGet:(NSString*)host params:(NSMutableDictionary*)params delegate:(NSObject*)_delegate {
+    NSString* urlString;
+    urlString = [self urlStringForParams:params path:host];
+    NSLog(@"url string: %@", urlString);
+    
+    //	NSLog(@"%s urlString:%@", __FUNCTION__, urlString);
+    NSURL *url = [NSURL URLWithString:urlString];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    request.timeOutSeconds = 15;
+    [request setDelegate:_delegate];
+    [request setAllowCompressedResponse:YES];
+    [request startAsynchronous];
+}
+
+-(NSString*)urlStringForParams:(NSDictionary*)params path:(NSString*)path {
+    NSString* fullPath = @"";
+//    fullPath = [NSString stringWithFormat:@"%@/%@", @"http://ssc.studentrnd.org", path];
+    fullPath = [NSString stringWithFormat:@"%@/%@", @"http://local.my.codeday.org/tapin", path];
+    
+    NSLog(@"%@", fullPath);
+	NSMutableString* queryPath = [NSMutableString stringWithCapacity:100];
+	NSString* separator = @"?";
+	for (NSString* key in [params allKeys]) {
+		[queryPath appendFormat:@"%@%@=%@", separator, key, [params objectForKey:key]];
+		separator = @"&";
+	}
+	NSString* urlString = [[NSString stringWithFormat:@"%@%@", fullPath, queryPath] stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    
+	return urlString;
+}
+
 +(int) timestamp {
     NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
     // NSTimeInterval is defined as double
     NSNumber *timeStampObj = [NSNumber numberWithDouble: timeStamp];
     return [timeStampObj integerValue];
 }
-
 
 +(NSString*) phoneID {
     return [Utilities sha1:[Utilities getMacAddress]];

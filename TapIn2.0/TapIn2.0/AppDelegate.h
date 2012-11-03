@@ -6,11 +6,13 @@
 //  Copyright (c) 2012 Vu Tran. All rights reserved.
 //
 
+extern NSString *server;
+
 #import <UIKit/UIKit.h>
 
 @class ViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
