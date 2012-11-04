@@ -12,6 +12,7 @@
 #import "Mixpanel.h"
 #import "ASIHTTPRequest.h"
 #import "Utilities.h"
+#import "SignUpViewController.h"
 
 @interface AppDelegate(){
     UITextField *passwordField;
@@ -35,48 +36,11 @@
 	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     NSMutableDictionary * dict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"foo", @"key", nil];
-    [[Utilities sharedInstance] sendGet:@"endpointhere" params:dict delegate:self];
-    
-    NSLog(@"test %@", [Utilities userDefaultValueforKey:@"username"]);
-    if(![Utilities userDefaultValueforKey:@"username"])
-    [self performSelector:@selector(promptUsernameInput) withObject:nil afterDelay:1];
-       
+           
     return YES;
 }
 
--(void)promptUsernameInput {
-    UIAlertView *passwordAlert = [[UIAlertView alloc] initWithTitle:@"Howdy" message:@"\n\n\n"
-                                                           delegate:self cancelButtonTitle:NSLocalizedString(@"Go",nil) otherButtonTitles: nil];
-    
-    UILabel *passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(12,40,260,25)];
-    passwordLabel.font = [UIFont systemFontOfSize:16];
-    passwordLabel.textColor = [UIColor whiteColor];
-    passwordLabel.backgroundColor = [UIColor clearColor];
-    passwordLabel.shadowColor = [UIColor blackColor];
-    passwordLabel.shadowOffset = CGSizeMake(0,-1);
-    passwordLabel.textAlignment = UITextAlignmentCenter;
-    passwordLabel.text = @"Sign In";
-    [passwordAlert addSubview:passwordLabel];
-    
-    UIImageView *passwordImage = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"passwordfield" ofType:@"png"]]];
-    passwordImage.frame = CGRectMake(11,69,262,31);
-    [passwordAlert addSubview:passwordImage];
-    
-    passwordField = [[UITextField alloc] initWithFrame:CGRectMake(16,73,252,25)];
-    passwordField.font = [UIFont systemFontOfSize:18];
-    passwordField.backgroundColor = [UIColor whiteColor];
-    passwordField.secureTextEntry = NO;
-    passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
-    passwordField.keyboardAppearance = UIKeyboardAppearanceAlert;
-    passwordField.delegate = self;
-    [passwordField becomeFirstResponder];
-    [passwordAlert addSubview:passwordField];
-    
-    [passwordAlert setTransform:CGAffineTransformMakeTranslation(0,0)];
-    [passwordAlert show];
 
-}
 
 - (BOOL)shouldAutorotate {
     return NO;
@@ -151,7 +115,6 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if([passwordField.text length]>0){
         NSLog(@"got here %@", passwordField.text);
-        [Utilities setUserDefaultValue:passwordField.text forKey:@"username"];
         NSMutableDictionary * params = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[Utilities phoneID], @"phone_id", passwordField.text, @"username", nil];
         [[Utilities sharedInstance] sendGet:@"phone/associate" params:params delegate:self];
     }

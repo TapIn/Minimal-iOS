@@ -16,6 +16,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "VideoViewController.h"
 #import "Reachability.h"
+#import "SignUpViewController.h"
 
 // Private vars
 @interface ViewController ()
@@ -35,6 +36,7 @@
 -(void) recording;
 -(void) updateProgressBar;
 -(void) sendPushNotification;
+-(void)promptUsernameInput;
 @end
 
 @implementation ViewController
@@ -49,9 +51,14 @@
     double delayToStartRecording = 0;
     dispatch_time_t startTime = dispatch_time(DISPATCH_TIME_NOW, delayToStartRecording * NSEC_PER_SEC);
     dispatch_after(startTime, dispatch_get_main_queue(), ^(void){
-        
-        [self useCamera:nil];
+        NSLog(@"test %@", [Utilities userDefaultValueforKey:@"username"]);
+        if(![Utilities userDefaultValueforKey:@"first_name"])
+            [self performSelector:@selector(promptUsernameInput) withObject:nil afterDelay:1];
+        else [self useCamera:nil];
     });
+    
+  
+
     
     //Set S3 creds
     [ASIS3Request setSharedSecretAccessKey:@"ajQqlwKdktd4HtbgAQbvLJSD32FzZ+Q1n270BfGX"];
@@ -337,6 +344,11 @@ finishedSavingWithError:(NSError *)error
     }
 }
 
+-(void)promptUsernameInput {
+    SignUpViewController * vc = [[SignUpViewController alloc]init];
+    [self presentModalViewController:vc animated:YES];
+}
+
 #pragma mark - house keeping
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -402,6 +414,7 @@ finishedSavingWithError:(NSError *)error
 {
     // [(GPUImageSepiaFilter *)filter setIntensity:[(UISlider *)sender value]];
 }
+
 
 
 @end

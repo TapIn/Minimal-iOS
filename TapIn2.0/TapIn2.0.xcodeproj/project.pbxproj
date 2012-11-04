@@ -178,6 +178,8 @@
 		972E1E07162901B3009963C9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 972E1E06162901B3009963C9 /* CoreFoundation.framework */; };
 		972E910B1639BDEF00045478 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972E91091639BDEF00045478 /* VideoViewController.m */; };
 		972E910C1639BDEF00045478 /* VideoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972E910A1639BDEF00045478 /* VideoViewController.xib */; };
+		972FD5E31645F2980060D34B /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972FD5E11645F2980060D34B /* SignUpViewController.m */; };
+		972FD5E41645F2980060D34B /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972FD5E21645F2980060D34B /* SignUpViewController.xib */; };
 		975075A61631EDB000F6C066 /* icon@114.png in Resources */ = {isa = PBXBuildFile; fileRef = 975075A31631EDB000F6C066 /* icon@114.png */; };
 		975075A71631EDB000F6C066 /* icon@512.png in Resources */ = {isa = PBXBuildFile; fileRef = 975075A41631EDB000F6C066 /* icon@512.png */; };
 		975075A81631EDB000F6C066 /* icon@72.png in Resources */ = {isa = PBXBuildFile; fileRef = 975075A51631EDB000F6C066 /* icon@72.png */; };
@@ -570,6 +572,9 @@
 		972E91081639BDEF00045478 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
 		972E91091639BDEF00045478 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		972E910A1639BDEF00045478 /* VideoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoViewController.xib; sourceTree = "<group>"; };
+		972FD5E01645F2980060D34B /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		972FD5E11645F2980060D34B /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		972FD5E21645F2980060D34B /* SignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
 		975075A31631EDB000F6C066 /* icon@114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@114.png"; sourceTree = "<group>"; };
 		975075A41631EDB000F6C066 /* icon@512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@512.png"; sourceTree = "<group>"; };
 		975075A51631EDB000F6C066 /* icon@72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@72.png"; sourceTree = "<group>"; };
@@ -1067,6 +1072,9 @@
 				972E1DDB1628F93C009963C9 /* AppDelegate.m */,
 				975075A21631EDB000F6C066 /* assets */,
 				97E364FB16290F0500DFAB5F /* ASI */,
+				972FD5E01645F2980060D34B /* SignUpViewController.h */,
+				972FD5E11645F2980060D34B /* SignUpViewController.m */,
+				972FD5E21645F2980060D34B /* SignUpViewController.xib */,
 				972E1DE31628F93C009963C9 /* ViewController.h */,
 				972E1DE41628F93C009963C9 /* ViewController.m */,
 				972E1DE61628F93C009963C9 /* ViewController.xib */,
@@ -1323,6 +1331,7 @@
 				97F84CF41645A7980024AE53 /* cdc_icon@2x.png in Resources */,
 				97F84CF61645A7A00024AE53 /* cdc_icon@2x.png in Resources */,
 				97F84CF81645A7AD0024AE53 /* cdc_icon.png in Resources */,
+				972FD5E41645F2980060D34B /* SignUpViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1509,6 +1518,7 @@
 				972A9A1D16387057005AEA6D /* GPUImageWhiteBalanceFilter.m in Sources */,
 				972A9A1E16387057005AEA6D /* GPUImageXYDerivativeFilter.m in Sources */,
 				972E910B1639BDEF00045478 /* VideoViewController.m in Sources */,
+				972FD5E31645F2980060D34B /* SignUpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
